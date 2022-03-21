@@ -56,6 +56,10 @@ type apiService struct {
 	Ctx    context.Context
 }
 
+var (
+	DEFAULT_TRANSPORT = &http.Transport{}
+)
+
 // NewAPIService creates instance of Service.
 //
 // If logger or ctx are not provided, NopLogger and Background context are used as default.
@@ -78,9 +82,12 @@ func NewAPIService(url, apiKey string, signer Signer, logger log.Logger, ctx con
 
 func (as *apiService) request(method string, endpoint string, params map[string]string,
 	apiKey bool, sign bool) (*http.Response, error) {
-	transport := &http.Transport{}
+	if DEFAULT_TRANSPORT == nil {
+		// transport := &http.Transport{}
+		DEFAULT_TRANSPORT = &http.Transport{}
+	}
 	client := &http.Client{
-		Transport: transport,
+		Transport: DEFAULT_TRANSPORT,
 	}
 
 	url := fmt.Sprintf("%s/%s", as.URL, endpoint)
