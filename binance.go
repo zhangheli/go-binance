@@ -274,6 +274,7 @@ type ProcessedOrder struct {
 	OrderID       int64
 	ClientOrderID string
 	TransactTime  time.Time
+	ResponseData  string
 }
 
 // NewOrder places new order and returns ProcessedOrder.
