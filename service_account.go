@@ -22,6 +22,7 @@ type rawExecutedOrder struct {
 	StopPrice     string  `json:"stopPrice"`
 	IcebergQty    string  `json:"icebergQty"`
 	Time          float64 `json:"time"`
+	UpdateTime    float64 `json:"updateTime"`
 }
 
 func (as *apiService) NewOrder(or NewOrderRequest) (*ProcessedOrder, error) {
@@ -625,6 +626,10 @@ func executedOrderFromRaw(reo *rawExecutedOrder) (*ExecutedOrder, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot parse Order.CloseTime")
 	}
+	upTime, err := timeFromUnixTimestampFloat(reo.UpdateTime)
+	if err != nil {
+		return nil, errors.Wrap(err, "cannot parse Order.UpdateTime")
+	}
 
 	return &ExecutedOrder{
 		Symbol:        reo.Symbol,
@@ -640,5 +645,6 @@ func executedOrderFromRaw(reo *rawExecutedOrder) (*ExecutedOrder, error) {
 		StopPrice:     stopPrice,
 		IcebergQty:    icebergQty,
 		Time:          t,
+		UpdateTime:    upTime,
 	}, nil
 }

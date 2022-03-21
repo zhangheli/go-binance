@@ -49,16 +49,13 @@ type Service interface {
 }
 
 type apiService struct {
-	URL    string
-	APIKey string
-	Signer Signer
-	Logger log.Logger
-	Ctx    context.Context
+	URL          string
+	APIKey       string
+	Signer       Signer
+	Logger       log.Logger
+	Ctx          context.Context
+	ReuseTripper http.RoundTripper
 }
-
-var (
-	DEFAULT_TRANSPORT = &http.Transport{}
-)
 
 // NewAPIService creates instance of Service.
 //
@@ -82,12 +79,11 @@ func NewAPIService(url, apiKey string, signer Signer, logger log.Logger, ctx con
 
 func (as *apiService) request(method string, endpoint string, params map[string]string,
 	apiKey bool, sign bool) (*http.Response, error) {
-	if DEFAULT_TRANSPORT == nil {
-		// transport := &http.Transport{}
-		DEFAULT_TRANSPORT = &http.Transport{}
+	if as.ReuseTripper == nil {
+		as.ReuseTripper = &http.Transport{}
 	}
 	client := &http.Client{
-		Transport: DEFAULT_TRANSPORT,
+		Transport: as.ReuseTripper,
 	}
 
 	url := fmt.Sprintf("%s/%s", as.URL, endpoint)

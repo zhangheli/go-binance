@@ -310,6 +310,7 @@ type ExecutedOrder struct {
 	StopPrice     float64
 	IcebergQty    float64
 	Time          time.Time
+	UpdateTime    time.Time
 }
 
 // QueryOrder returns data about existing order.
