@@ -2,10 +2,8 @@ package binance
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -59,14 +57,6 @@ type apiService struct {
 	ReuseTripper http.RoundTripper
 }
 
-var tripperPool = sync.Pool{
-	New: func() interface{} {
-		return &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		}
-	},
-}
-
 // NewAPIService creates instance of Service.
 //
 // If logger or ctx are not provided, NopLogger and Background context are used as default.
@@ -89,14 +79,11 @@ func NewAPIService(url, apiKey string, signer Signer, logger log.Logger, ctx con
 
 func (as *apiService) request(method string, endpoint string, params map[string]string,
 	apiKey bool, sign bool) (*http.Response, error) {
-	// if as.ReuseTripper == nil {
-	// 	as.ReuseTripper = &http.Transport{}
-	// }
-	// client := &http.Client{
-	// 	Transport: as.ReuseTripper,
-	// }
+	if as.ReuseTripper == nil {
+		as.ReuseTripper = &http.Transport{}
+	}
 	client := &http.Client{
-		Transport: tripperPool.Get().(*http.Transport),
+		Transport: as.ReuseTripper,
 	}
 
 	url := fmt.Sprintf("%s/%s", as.URL, endpoint)
