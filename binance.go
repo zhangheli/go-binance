@@ -33,6 +33,7 @@ type Binance interface {
 
 	// NewOrder places new order and returns ProcessedOrder.
 	NewOrder(nor NewOrderRequest) (*ProcessedOrder, error)
+	NewOrderWithParam(or NewOrderRequest, params map[string]string) (*ProcessedOrder, error)
 	// NewOrder places testing order.
 	NewOrderTest(nor NewOrderRequest) error
 	// QueryOrder returns data about existing order.
