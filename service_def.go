@@ -26,6 +26,7 @@ type Service interface {
 	TickerAllBooks() ([]*BookTicker, error)
 
 	NewOrder(or NewOrderRequest) (*ProcessedOrder, error)
+	NewOrderWithParam(or NewOrderRequest, params map[string]string) (*ProcessedOrder, error)
 	NewOrderTest(or NewOrderRequest) error
 	QueryOrder(qor QueryOrderRequest) (*ExecutedOrder, error)
 	CancelOrder(cor CancelOrderRequest) (*CanceledOrder, error)

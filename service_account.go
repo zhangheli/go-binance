@@ -25,8 +25,8 @@ type rawExecutedOrder struct {
 	UpdateTime    float64 `json:"updateTime"`
 }
 
-func (as *apiService) NewOrder(or NewOrderRequest) (*ProcessedOrder, error) {
-	params := make(map[string]string)
+func (as *apiService) NewOrderWithParam(or NewOrderRequest, params map[string]string) (*ProcessedOrder, error) {
+	// params := make(map[string]string)
 	params["symbol"] = or.Symbol
 	params["side"] = string(or.Side)
 	params["type"] = string(or.Type)
@@ -80,6 +80,10 @@ func (as *apiService) NewOrder(or NewOrderRequest) (*ProcessedOrder, error) {
 		TransactTime:  t,
 		ResponseData:  string(textRes),
 	}, nil
+}
+
+func (as *apiService) NewOrder(or NewOrderRequest) (*ProcessedOrder, error) {
+	return as.NewOrderWithParam(or, make(map[string]string))
 }
 
 func (as *apiService) NewOrderTest(or NewOrderRequest) error {
