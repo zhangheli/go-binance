@@ -283,6 +283,11 @@ func (b *binance) NewOrder(nor NewOrderRequest) (*ProcessedOrder, error) {
 	return b.Service.NewOrder(nor)
 }
 
+// NewOrderWithParam places new order and returns ProcessedOrder.
+func (b *binance) NewOrderWithParam(nor NewOrderRequest, params map[string]string) (*ProcessedOrder, error) {
+	return b.Service.NewOrderWithParam(nor, params)
+}
+
 // NewOrder places testing order.
 func (b *binance) NewOrderTest(nor NewOrderRequest) error {
 	return b.Service.NewOrderTest(nor)
